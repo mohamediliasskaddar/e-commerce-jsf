@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Inscription</title>
+    <h:outputStylesheet>
+        .container {
+            max-width: 400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h1 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.875rem;
+        }
+
+        .container form {
+            margin-bottom: 1.5rem;
+        }
+
+        .container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .container td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .container label {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .container input[type="text"],
+        .container input[type="password"],
+        .container select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .container input[type="text"]:focus,
+        .container input[type="password"]:focus,
+        .container select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .container button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .container button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            border-left: 4px solid #dc2626;
+        }
+
+        .container p {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+
+        .container a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .container a:hover {
+            text-decoration: underline;
+        }
+
+    </h:outputStylesheet>
+
+</h:head>
+<h:body>
+    <div class="container">
+        <h1>Inscription</h1>
+
+        <h:form>
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel value="Username:" />
+                <h:inputText value="#{userC.user.username}" required="true" />
+
+                <h:outputLabel value="Email:" />
+                <h:inputText value="#{userC.user.email}" required="true" />
+
+                <h:outputLabel value="Mot de passe:" />
+                <h:inputSecret value="#{userC.user.password}" required="true" />
+
+                <h:outputLabel value="Rôle:" />
+                <h:selectOneMenu value="#{userC.user.role}">
+                    <f:selectItem itemValue="CLIENT" itemLabel="Client" />
+                    <f:selectItem itemValue="ADMIN" itemLabel="Administrateur" />
+                </h:selectOneMenu>
+
+                <h:panelGroup />
+                <h:commandButton value="S'inscrire" action="#{userC.add}" />
+            </h:panelGrid>
+
+            <h:panelGroup rendered="#{userC.errorMessage != null}">
+                <div class="error">#{userC.errorMessage}</div>
+            </h:panelGroup>
+        </h:form>
+
+        <p>Déjà un compte ? <h:link outcome="login" value="Connectez-vous ici" /></p>
+    </div>
+</h:body>
+</html>

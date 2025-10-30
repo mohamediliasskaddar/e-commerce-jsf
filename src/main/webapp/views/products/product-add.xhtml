@@ -1,0 +1,183 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Ajouter un Produit</title>
+    <h:outputStylesheet>
+        /* Product Edit Page Styles */
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .container h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .container h1 + h:form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* PanelGrid styling */
+        .ui-panelgrid {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ui-panelgrid td {
+            padding: 15px;
+            border: none;
+        }
+
+        .ui-panelgrid label {
+            font-weight: 500;
+            color: #374151;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .ui-panelgrid input[type="text"],
+        .ui-panelgrid input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .ui-panelgrid input[type="text"]:focus,
+        .ui-panelgrid input[type="number"]:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .ui-panelgrid button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .ui-panelgrid button:first-of-type {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .ui-panelgrid button:first-of-type:hover {
+            background-color: #1d4ed8;
+        }
+
+        .ui-panelgrid button:last-of-type {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .ui-panelgrid button:last-of-type:hover {
+            background-color: #d1d5db;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .container p {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .container p a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .container p a:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .ui-panelgrid td {
+                padding: 12px;
+            }
+        }
+
+    </h:outputStylesheet>
+
+</h:head>
+<h:body>
+    <!-- INCLURE LE HEADER -->
+    <ui:include src="/views/includes/header.xhtml" />
+
+    <div class="container">
+        <h1 class="page-title">#{productC.selectedProduct.id_product != null ? '✏️ Modifier le Produit' : '➕ Ajouter un Produit'}</h1>
+
+        <div class="form-container">
+            <h:form>
+                <table class="form-grid">
+                    <tr>
+                        <td class="form-label">
+                            <h:outputLabel value="Nom du produit:" />
+                        </td>
+                        <td>
+                            <h:inputText value="#{productC.product.name}" required="true" styleClass="form-input" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">
+                            <h:outputLabel value="Prix (DH):" />
+                        </td>
+                        <td>
+                            <h:inputText value="#{productC.product.price}" required="true" styleClass="form-input">
+                                <f:convertNumber type="number" />
+                            </h:inputText>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="button-group">
+                    <h:commandButton value="#{productC.selectedProduct.id_product != null ? 'Modifier' : 'Ajouter'}"
+                                     action="#{productC.selectedProduct.id_product != null ? productC.update : productC.add}"
+                                     styleClass="submit-btn" />
+                    <h:commandButton value="Annuler" action="#{productC.goToList}" immediate="true" styleClass="cancel-btn" />
+                </div>
+
+                <h:panelGroup rendered="#{productC.errorMessage != null}">
+                    <div class="error">#{productC.errorMessage}</div>
+                </h:panelGroup>
+            </h:form>
+        </div>
+
+        <div class="back-link">
+            <h:link outcome="products" value="← Retour à la liste des produits" />
+        </div>
+    </div>
+</h:body>
+</html>

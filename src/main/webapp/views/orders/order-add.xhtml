@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Créer une Commande</title>
+    <h:outputStylesheet>
+        /* Order Add Page Styles */
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .container h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Client Selection (Admin only) */
+        .ui-panelgrid {
+            width: 100%;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .ui-panelgrid td {
+            padding: 12px;
+            border: none;
+        }
+
+        .ui-panelgrid label {
+            font-weight: 500;
+            color: #374151;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .ui-panelgrid select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .ui-panelgrid select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Product Table */
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .product-table thead {
+            background-color: #f3f4f6;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .product-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .product-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .product-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .product-table select,
+        .product-table input[type="text"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 13px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .product-table select:focus,
+        .product-table input[type="text"]:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .total-row {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .total-row td {
+            padding: 18px 15px;
+            border-bottom: none;
+        }
+
+        /* Action Buttons */
+        div[style*="margin: 20px 0"] {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .container button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .container button:nth-of-type(1) {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .container button:nth-of-type(1):hover {
+            background-color: #059669;
+        }
+
+        .container button:nth-of-type(2) {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .container button:nth-of-type(2):hover {
+            background-color: #1d4ed8;
+        }
+
+        .container button:nth-of-type(3) {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .container button:nth-of-type(3):hover {
+            background-color: #dc2626;
+        }
+
+        /* Error Message */
+        .error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .product-table {
+                font-size: 12px;
+            }
+
+            .product-table th,
+            .product-table td {
+                padding: 10px;
+            }
+
+            div[style*="margin: 20px 0"] {
+                flex-direction: column;
+            }
+
+            .container button {
+                width: 100%;
+            }
+        }
+
+    </h:outputStylesheet>
+</h:head>
+<h:body>
+    <ui:include src="/views/includes/header.xhtml" />
+
+    <div class="container">
+        <h1>Créer une Commande</h1>
+
+        <h:form id="orderForm">
+            <!-- Pour admin: sélectionner un utilisateur -->
+            <h:panelGrid columns="2" rendered="#{userC.user.role == 'ADMIN'}">
+                <h:outputLabel value="Client:" />
+                <h:selectOneMenu value="#{orderC.selectedUserId}">
+                    <f:selectItem itemLabel="-- Sélectionner un client --" itemValue="#{null}" />
+                    <f:selectItems value="#{userC.users}" var="user"
+                                   itemLabel="#{user.username} (#{user.email})"
+                                   itemValue="#{user.id_user}" />
+                </h:selectOneMenu>
+            </h:panelGrid>
+
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire (DH)</th>
+                    <th>Sous-total (DH)</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ui:repeat value="#{commandLineC.commandLineItems}" var="item" varStatus="status">
+                    <tr>
+                        <td>
+                            <h:selectOneMenu value="#{commandLineC.temporaryProductIds[status.index]}">
+                                <f:selectItem itemLabel="-- Choisir produit --" itemValue="#{null}" />
+                                <f:selectItems value="#{commandLineC.products}" var="product"
+                                               itemLabel="#{product.name} (#{product.price} DH)"
+                                               itemValue="#{product.id_product}" />
+                                <f:ajax event="change"
+                                        listener="#{commandLineC.onProductSelected(status.index, commandLineC.temporaryProductIds[status.index])}"
+                                        render="orderForm" />
+                            </h:selectOneMenu>
+                        </td>
+                        <td>
+                            <h:inputText value="#{item.quantity}" id="quantityInput">
+                                <f:convertNumber integerOnly="true" />
+                                <!-- CORRECTION : Utiliser keyup ET change pour plus de réactivité -->
+                                <f:ajax event="keyup" listener="#{commandLineC.onQuantityChange(status.index)}"
+                                        execute="@this" render="orderForm" />
+                                <f:ajax event="change" listener="#{commandLineC.onQuantityChange(status.index)}"
+                                        execute="@this" render="orderForm" />
+                            </h:inputText>
+                        </td>
+                        <td>
+                            <h:outputText value="#{item.product != null ? item.product.price : 0}">
+                                <f:convertNumber minFractionDigits="2" />
+                            </h:outputText>
+                        </td>
+                        <td>
+                            <h:outputText value="#{item.subtotal}">
+                                <f:convertNumber minFractionDigits="2" />
+                            </h:outputText> DH
+                        </td>
+                        <td>
+                            <h:commandButton value="❌ Supprimer" action="#{commandLineC.removeProductRow(item)}"
+                                             rendered="#{commandLineC.commandLineItems.size() > 1}">
+                                <f:ajax execute="@form" render="@form" />
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+                <tfoot>
+                <tr class="total-row">
+                    <td colspan="3" style="text-align: right;">Total Général:</td>
+                    <td colspan="2">
+                        <h:outputText value="#{commandLineC.calculateTotal()}">
+                            <f:convertNumber minFractionDigits="2" />
+                        </h:outputText> DH
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <div style="margin: 20px 0; text-align: center;">
+                <h:commandButton value="➕ Ajouter un produit"
+                                 actionListener="#{commandLineC.addProductRow}">
+                    <f:ajax execute="@form" render="@form" />
+                </h:commandButton>
+
+                <h:commandButton value="📦 Créer la commande"
+                                 action="#{orderC.createOrder}"
+                                 style="margin-left: 10px;" />
+
+                <h:commandButton value="❌ Annuler"
+                                 action="#{orderC.getAllOrders}"
+                                 immediate="true" style="margin-left: 10px;" />
+            </div>
+            <!-- Messages d'erreur -->
+            <h:panelGroup rendered="#{orderC.errorMessage != null}">
+                <div class="error">❌ #{orderC.errorMessage}</div>
+            </h:panelGroup>
+        </h:form>
+    </div>
+</h:body>
+</html>

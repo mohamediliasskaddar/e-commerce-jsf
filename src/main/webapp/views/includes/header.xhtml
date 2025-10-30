@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h:link outcome="/index" value="🏠 Accueil" />
+        <h:link outcome="/views/products/products" value="📦 Produits" />
+
+        <!-- Liens conditionnels selon le rôle -->
+        <h:link outcome="/views/orders/my-orders" value="📋 Mes commandes"
+                rendered="#{userC.user != null and userC.user.role == 'CLIENT'}" />
+        <h:link outcome="/views/orders/orders" value="📋 Toutes les commandes"
+                rendered="#{userC.user != null and userC.user.role == 'ADMIN'}" />
+        <h:link outcome="/views/users/users" value="👥 Utilisateurs"
+                rendered="#{userC.user != null and userC.user.role == 'ADMIN'}" />
+
+        <!-- Liens de connexion/déconnexion -->
+        <h:link outcome="/views/users/login" value="🔐 Connexion"
+                rendered="#{userC.user == null}" />
+        <h:link outcome="/views/users/register" value="📝 Inscription"
+                rendered="#{userC.user == null}" />
+
+        <!-- Info utilisateur connecté - CORRIGÉ -->
+        <h:panelGroup rendered="#{userC.user != null}">
+            <span style="color: white; margin-left: 20px;">
+                👋 #{userC.user.username}
+            </span>
+        </h:panelGroup>
+    </div>
+
+    <!-- Styles CSS -->
+<style>
+    .navbar {
+        background-color: #2563eb;
+        padding: 1rem 2rem;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.3s ease;
+    }
+
+    .navbar a:hover {
+        opacity: 0.8;
+    }
+
+    .navbar span {
+        color: white;
+        margin-left: auto;
+        font-weight: 500;
+    }
+
+</style>
+</ui:composition>
